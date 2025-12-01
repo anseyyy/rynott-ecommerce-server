@@ -6,6 +6,17 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
+// Validate critical environment variables
+const requiredEnvVars = ["JWT_SECRET", "MONGODB_URI"];
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error("❌ ERROR: Missing required environment variables:");
+  missingEnvVars.forEach((envVar) => console.error(`   - ${envVar}`));
+  console.error("Please set these variables in your Render dashboard.");
+  // Don't exit, but warn - this allows the app to start with fallbacks
+}
+
 const connectDB = require("./config/database");
 const errorHandler = require("./middleware/errorHandler");
 const authRoutes = require("./routes/auth");
