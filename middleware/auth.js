@@ -3,7 +3,9 @@ const User = require("../models/User");
 
 const protect = async (req, res, next) => {
   let token;
-  const jwtSecret = process.env.JWT_SECRET || "rynott_super_secret_jwt_key_change_in_production_2024";
+  const jwtSecret =
+    process.env.JWT_SECRET ||
+    "rynott_super_secret_jwt_key_change_in_production_2024";
 
   if (
     req.headers.authorization &&
