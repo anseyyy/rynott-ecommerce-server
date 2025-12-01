@@ -24,28 +24,36 @@ connectDB();
 
 // Security middleware
 app.use(helmet());
+
+// CORS Configuration - Allow frontend origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://rynott-ecommerce.vercel.app",
+  "https://rynott-ecommerce-server.onrender.com",
+];
+
+// Add FRONTEND_URL from env if it exists
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, etc.)
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-
-      // List of allowed origins
-      const allowedOrigins = [
-        process.env.FRONTEND_URL,
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://rynott-ecommerce.vercel.app",
-        "https://rynott-ecommerce-server.onrender.com",
-      ];
-
+      
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       } else {
+        console.warn(`CORS request blocked from origin: ${origin}`);
         return callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
