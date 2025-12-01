@@ -81,7 +81,9 @@ UserSchema.pre("save", async function (next) {
 UserSchema.methods.getSignedJwtToken = function () {
   const jwtSecret = process.env.JWT_SECRET || "your_jwt_secret_key_change_this";
   if (!jwtSecret || jwtSecret === "your_jwt_secret_key_change_this") {
-    console.error("ERROR: JWT_SECRET is not properly configured in environment variables!");
+    console.error(
+      "ERROR: JWT_SECRET is not properly configured in environment variables!"
+    );
   }
   return jwt.sign({ id: this._id }, jwtSecret, {
     expiresIn: process.env.JWT_EXPIRE || "30d",
