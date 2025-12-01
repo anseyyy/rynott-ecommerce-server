@@ -19,6 +19,9 @@ const cartRoutes = require("./routes/cart");
 
 const app = express();
 
+// Trust proxy for Render/production environments
+app.set("trust proxy", 1);
+
 // Connect to MongoDB
 connectDB();
 
@@ -43,7 +46,7 @@ app.use(
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      
+
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       } else {
@@ -61,6 +64,14 @@ app.use(
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
+  skip: (req, res) => {
+    // Skip rate limiting for health checks
+    return req.path === "/api/health";
+  },
+  keyGenerator: (req, res) => {
+    // Use X-Forwarded-For for production, fallback to IP
+    return req.headers["x-forwarded-for"] || req.ip;
+  },
 });
 app.use("/api/", limiter);
 
