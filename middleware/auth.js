@@ -18,12 +18,12 @@ const protect = async (req, res, next) => {
       // Verify token
       const decoded = jwt.verify(token, jwtSecret);
 
-      console.log("🔍 JWT Decoded:", {
+      console.log(" JWT Decoded:", {
         id: decoded.id,
         iat: decoded.iat,
         exp: decoded.exp,
       });
-      console.log("🔍 Looking for user with ID:", decoded.id);
+      console.log(" Looking for user with ID:", decoded.id);
 
       // Get user from the token
       const user = await User.findById(decoded.id).select("-password");
@@ -33,7 +33,7 @@ const protect = async (req, res, next) => {
       );
 
       if (!user) {
-        console.error("❌ User not found in database");
+        console.error(" User not found in database");
         return res.status(401).json({
           success: false,
           message: "User not found",
@@ -43,7 +43,7 @@ const protect = async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.error("❌ JWT Error:", error.message);
+      console.error(" JWT Error:", error.message);
       return res.status(401).json({
         success: false,
         message: "Not authorized to access this route",
@@ -67,11 +67,11 @@ const adminOnly = (req, res, next) => {
   );
 
   if (req.user && req.user.role === "admin") {
-    console.log("✅ Admin access granted");
+    console.log(" Admin access granted");
     next();
   } else {
     console.log(
-      "❌ Admin access denied - User:",
+      " Admin access denied - User:",
       req.user ? `Role: ${req.user.role}` : "No user"
     );
     res.status(403).json({
