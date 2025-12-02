@@ -79,17 +79,14 @@ UserSchema.pre("save", async function (next) {
 
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
-  const jwtSecret =
-    process.env.JWT_SECRET ||
-    "rynott_super_secret_jwt_key_change_in_production_2024";
-  if (
-    !jwtSecret ||
-    jwtSecret === "rynott_super_secret_jwt_key_change_in_production_2024"
-  ) {
-    console.error(
-      "ERROR: JWT_SECRET is not properly configured in environment variables!"
-    );
+  let jwtSecret = process.env.JWT_SECRET;
+
+  // Use fallback if JWT_SECRET not set
+  if (!jwtSecret) {
+    jwtSecret = "rynott_super_secret_jwt_key_change_in_production_2024";
+    console.warn("WARNING: JWT_SECRET not set, using fallback secret.");
   }
+
   return jwt.sign({ id: this._id }, jwtSecret, {
     expiresIn: process.env.JWT_EXPIRE || "30d",
   });
