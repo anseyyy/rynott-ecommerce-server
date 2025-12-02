@@ -1,0 +1,23 @@
+[
+  {
+    "test": "Server Health Check",
+    "success": true,
+    "message": "Server is responding",
+    "statusCode": null,
+    "timestamp": "2025-12-02T07:15:18.269Z"
+  },
+  {
+    "test": "Admin Login",
+    "success": true,
+    "message": "Successfully authenticated as admin",
+    "statusCode": null,
+    "timestamp": "2025-12-02T07:15:19.844Z"
+  },
+  {
+    "test": "Protected Endpoint Without Auth",
+    "success": true,
+    "message": "Correctly rejected unauthorized access",
+    "statusCode": 401,
+    "timestamp": "2025-12-02T07:15:20.168Z"
+  }
+]

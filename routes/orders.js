@@ -7,7 +7,7 @@ const {
   deleteOrder,
 } = require("../controllers/orders");
 
-const { protect } = require("../middleware/auth");
+const { protect, adminOnly } = require("../middleware/auth");
 const Order = require("../models/Order");
 const advancedResults = require("../middleware/advancedResults");
 
